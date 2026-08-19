@@ -1,0 +1,21 @@
+name: ham4digitaltwin
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - libblas=*=*openblas  # avoid MKL/OpenMP runtime collisions on Windows
+  - numpy
+  - scipy
+  - matplotlib
+  - pillow            # load the PCB photo for the circuit-board heat example
+  - scikit-image      # segment the chips from the PCB photo
+  - pandas
+  - scikit-learn
+  - statsmodels       # ARIMA / ETS / STL for the forecasting module
+  - jupyterlab
+  - jupytext          # pair notebooks with .py for clean diffs
+  - nbgrader          # generate student copies from solution notebooks
+  - pip
+  - pip:
+      - torch          # deep learning (PINNs, DeepONet, FNO, ...)
+      - pysindy        # data-driven equation discovery
