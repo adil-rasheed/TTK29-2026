@@ -224,6 +224,17 @@ def turbulent_wind(v_mean: float, t_end: float = 300.0, dt: float = 0.05,
 
     Returns ``(v_fn, t, v)`` where ``v_fn(s)`` interpolates the sampled series --
     a realistic turbulent wind for driving the closed loop.
+
+    The same OU recursion (u += dt*(-u/tau) + TI*v_mean*sqrt(2 dt/tau)*xi) is
+    what the hybrid modules use for the turbine thread; the parameters differ
+    by module and are recorded in each results file:
+        Module 20 (CoSTA)     TI = 0.08, tau = 25 s, dt = 0.1 s, 250 s windows
+        Module 25 (DeepONet)  TI = 0.07, tau = 30 s, dt = 0.1 s, 200 s windows,
+                              v_mean in [8, 14] m/s
+        Modules 02 and 22 use steady (constant) wind: the power-curve surrogate
+        and the one-manoeuvre PINN need no turbulence.
+    The wake field of Modules 21, 22 and 26 is a different object (a 2-D
+    steady field defined in those modules' notebooks).
     """
     rng = np.random.default_rng(seed)
     n = int(round(t_end / dt))

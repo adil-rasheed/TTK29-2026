@@ -22,25 +22,9 @@ import torch
 import torch.nn as nn
 
 
-class MLP(nn.Module):
-    """Tanh MLP. `layers` e.g. [1, 32, 32, 1] = 1 input, two hidden, 1 output."""
-
-    def __init__(self, layers: list[int]):
-        super().__init__()
-        mods: list[nn.Module] = []
-        for d_in, d_out in zip(layers[:-1], layers[1:]):
-            mods.append(nn.Linear(d_in, d_out))
-            mods.append(nn.Tanh())
-        mods.pop()  # drop the final activation -> linear output
-        self.net = nn.Sequential(*mods)
-        # Glorot/Xavier init, matching the original code.
-        for m in self.net:
-            if isinstance(m, nn.Linear):
-                nn.init.xavier_normal_(m.weight)
-                nn.init.zeros_(m.bias)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.net(x)
+# The MLP lives in pyutils.nets so that modules with no physics content can
+# import it under a neutral name; re-exported here for existing call sites.
+from .nets import MLP  # noqa: E402,F401
 
 
 def grad(y: torch.Tensor, x: torch.Tensor) -> torch.Tensor:

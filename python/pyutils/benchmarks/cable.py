@@ -52,7 +52,7 @@ class Cable:
     rho_i: float = 930.0      # density [kg/m^3]
     cp_i: float = 2200.0      # specific heat [J/kg/K]
     # --- electrical & cooling -------------------------------------------
-    I: float = 1000.0         # conductor current [A]
+    I: float = 1000.0         # conductor current [A]  (rated; slides use this value)
     h: float = 20.0           # convective coefficient at r=b [W/m^2/K]
     T_inf: float = 20.0       # ambient (water) temperature [C]
     T_init: float = 20.0      # initial temperature [C]

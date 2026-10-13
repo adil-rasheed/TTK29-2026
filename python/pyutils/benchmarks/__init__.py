@@ -17,6 +17,6 @@ Example
 >>> from pyutils.benchmarks import vessel
 >>> t, Z = vessel.simulate(vessel.turning_circle(), t_end=40.0)
 """
-from . import vessel, turbine, heat, cable, navier_stokes
+from . import vessel, turbine, heat, heat1d, cable, navier_stokes
 
-__all__ = ["vessel", "turbine", "heat", "cable", "navier_stokes"]
+__all__ = ["vessel", "turbine", "heat", "heat1d", "cable", "navier_stokes"]

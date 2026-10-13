@@ -7,8 +7,10 @@ The course's first PDE benchmark:
 solved with central differences in space and forward Euler in time (FTCS) on a
 uniform grid. The explicit scheme is stable only under the von Neumann limit
 returned by `stable_dt`. Used by the gluing, circuit-board and (1-D) egg
-applications, and re-used as ground truth by the CoSTA module, where the source
-term qdot is the quantity a network learns.
+applications of Module 01 and by the 2-D surrogate of Module 02. The 1-D heat
+rod that Modules 20-26 use is defined in their own notebooks (the CoSTA module
+has its own backward-Euler solver); see Audit_Hybrid_Story.md for the plan to
+share one definition.
 
 Notation: scalar fields/properties italic (T, alpha, k); the flux is a vector.
 """

@@ -16,10 +16,25 @@ scalar fields.
 """
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
 
 # ----------------------------- lid-driven cavity ------------------------------
+
+def cavity_dt(nx: int, ny: int, Re: float, U_lid: float = 1.0, L: float = 1.0) -> float:
+    """Default time step used by `lid_driven_cavity`.
+
+    The smaller of the diffusive limit 0.2 h^2/nu and the convective (CFL)
+    limit 0.5 h/U_lid, with h = min(dx, dy). At Re = 100 on a 41x41 grid the
+    two coincide at 0.0125; at higher Re the CFL bound takes over, which is
+    what keeps the explicit predictor from blowing up.
+    """
+    h = min(L / (nx - 1), L / (ny - 1))
+    nu = U_lid * L / Re
+    return min(0.2 * h**2 / nu, 0.5 * h / U_lid)
+
 
 def lid_driven_cavity(nx: int = 41, ny: int = 41, nt: int = 500,
                       nit: int = 50, Re: float = 100.0, U_lid: float = 1.0,
@@ -29,12 +44,17 @@ def lid_driven_cavity(nx: int = 41, ny: int = 41, nt: int = 500,
 
     Returns (x, y, u, v, p) on an (nx, ny) grid. Density is scaled to 1, so
     nu = U_lid * L / Re.
+
+    The central-difference convection term needs a modest cell Reynolds number
+    U_lid * dx / nu (= Re / (nx - 1) on the unit square); keep it below ~10 by
+    refining the grid when you raise Re. If the fields diverge the function
+    returns NaNs and emits a RuntimeWarning saying so.
     """
     dx, dy = L / (nx - 1), L / (ny - 1)
     x = np.linspace(0, L, nx)
     y = np.linspace(0, L, ny)
     nu = U_lid * L / Re
-    dt = dt or 0.2 * min(dx, dy) ** 2 / nu        # diffusive-safe step
+    dt = dt or cavity_dt(nx, ny, Re, U_lid, L)  # diffusive- and CFL-safe step
     rho = 1.0
 
     u = np.zeros((nx, ny))
@@ -59,38 +79,47 @@ def lid_driven_cavity(nx: int = 41, ny: int = 41, nt: int = 500,
         d[1:-1, 1:-1] = (f[1:-1, 2:] - f[1:-1, :-2]) / (2 * dy)
         return d
 
-    for _ in range(nt):
-        # --- predictor: momentum without the pressure gradient -> u*, v* ---
-        un, vn = u.copy(), v.copy()
-        u_star = un + dt * (-(un * ddx(un) + vn * ddy(un)) + nu * laplacian(un))
-        v_star = vn + dt * (-(un * ddx(vn) + vn * ddy(vn)) + nu * laplacian(vn))
+    with np.errstate(over="ignore", invalid="ignore"):
+        for _ in range(nt):
+            # --- predictor: momentum without the pressure gradient -> u*, v* ---
+            un, vn = u.copy(), v.copy()
+            u_star = un + dt * (-(un * ddx(un) + vn * ddy(un)) + nu * laplacian(un))
+            v_star = vn + dt * (-(un * ddx(vn) + vn * ddy(vn)) + nu * laplacian(vn))
 
-        # boundary conditions on the intermediate velocity
-        for f in (u_star, v_star):
-            f[0, :] = 0.0; f[-1, :] = 0.0; f[:, 0] = 0.0
-        u_star[:, -1] = U_lid; v_star[:, -1] = 0.0
+            # boundary conditions on the intermediate velocity
+            for f in (u_star, v_star):
+                f[0, :] = 0.0; f[-1, :] = 0.0; f[:, 0] = 0.0
+            u_star[:, -1] = U_lid; v_star[:, -1] = 0.0
 
-        # --- pressure Poisson: lap(p) = rho/dt * div(u*) (Jacobi iterations) ---
-        rhs = rho / dt * (ddx(u_star) + ddy(v_star))
-        for _ in range(nit):
-            pn = p.copy()
-            p[1:-1, 1:-1] = (
-                ((pn[2:, 1:-1] + pn[:-2, 1:-1]) * dy**2
-                 + (pn[1:-1, 2:] + pn[1:-1, :-2]) * dx**2
-                 - rhs[1:-1, 1:-1] * dx**2 * dy**2)
-                / (2 * (dx**2 + dy**2))
-            )
-            # Neumann p (dp/dn=0) on walls, reference p=0 at top lid
-            p[0, :] = p[1, :]; p[-1, :] = p[-2, :]
-            p[:, 0] = p[:, 1]; p[:, -1] = 0.0
+            # --- pressure Poisson: lap(p) = rho/dt * div(u*) (Jacobi iterations) ---
+            rhs = rho / dt * (ddx(u_star) + ddy(v_star))
+            for _ in range(nit):
+                pn = p.copy()
+                p[1:-1, 1:-1] = (
+                    ((pn[2:, 1:-1] + pn[:-2, 1:-1]) * dy**2
+                     + (pn[1:-1, 2:] + pn[1:-1, :-2]) * dx**2
+                     - rhs[1:-1, 1:-1] * dx**2 * dy**2)
+                    / (2 * (dx**2 + dy**2))
+                )
+                # Neumann p (dp/dn=0) on walls, reference p=0 at top lid
+                p[0, :] = p[1, :]; p[-1, :] = p[-2, :]
+                p[:, 0] = p[:, 1]; p[:, -1] = 0.0
 
-        # --- corrector: project to a divergence-free velocity ---
-        u = u_star - dt / rho * ddx(p)
-        v = v_star - dt / rho * ddy(p)
+            # --- corrector: project to a divergence-free velocity ---
+            u = u_star - dt / rho * ddx(p)
+            v = v_star - dt / rho * ddy(p)
 
-        # re-impose velocity BCs
-        u[0, :] = 0.0; u[-1, :] = 0.0; u[:, 0] = 0.0; u[:, -1] = U_lid
-        v[0, :] = 0.0; v[-1, :] = 0.0; v[:, 0] = 0.0; v[:, -1] = 0.0
+            # re-impose velocity BCs
+            u[0, :] = 0.0; u[-1, :] = 0.0; u[:, 0] = 0.0; u[:, -1] = U_lid
+            v[0, :] = 0.0; v[-1, :] = 0.0; v[:, 0] = 0.0; v[:, -1] = 0.0
+
+    if not (np.isfinite(u).all() and np.isfinite(v).all() and np.isfinite(p).all()):
+        cell_re = U_lid * max(dx, dy) / nu
+        warnings.warn(
+            f"lid_driven_cavity diverged (NaN/inf) at Re={Re:g} on a {nx}x{ny} "
+            f"grid: cell Reynolds number U*dx/nu = {cell_re:.1f}. Refine the grid "
+            "(larger nx, ny) so U*dx/nu is below ~10, or lower Re.",
+            RuntimeWarning, stacklevel=2)
 
     return x, y, u, v, p
 
