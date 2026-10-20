@@ -1,0 +1,1367 @@
+{
+ "provenance": "synthetic: simulated NREL-5MW-like turbine with a prescribed erosion law; no measured data",
+ "config": {
+  "SEED": 0,
+  "N_SAMPLES": 2500,
+  "DT": 0.1,
+  "TI": 0.08,
+  "TAU": 25.0,
+  "EROSION": 0.015,
+  "CASES_TRAIN": [
+   [
+    9.0,
+    1
+   ],
+   [
+    9.0,
+    2
+   ],
+   [
+    9.0,
+    3
+   ]
+  ],
+  "CASES_VAL": [
+   [
+    9.0,
+    11
+   ],
+   [
+    9.0,
+    12
+   ]
+  ],
+  "CASES_TEST_SAME": [
+   [
+    9.0,
+    21
+   ],
+   [
+    9.0,
+    22
+   ]
+  ],
+  "CASES_TEST_TRANSFER": [
+   [
+    11.5,
+    31
+   ],
+   [
+    11.5,
+    32
+   ]
+  ],
+  "CASES_AUG": [
+   [
+    12.0,
+    41
+   ],
+   [
+    12.0,
+    42
+   ]
+  ],
+  "OMEGA_NOISE": 0.0,
+  "INPUT_STD_FLOOR": [
+   0.02,
+   0.5,
+   1.0
+  ],
+  "HIDDEN": [
+   32,
+   32
+  ],
+  "LR": 0.003,
+  "MAX_STEPS": 3000,
+  "LR_HALVE": 1000,
+  "VAL_EVERY": 250,
+  "PATIENCE": 6,
+  "MIN_REL_IMPROVEMENT": 0.01,
+  "RUN_COVERAGE_ABLATION": true,
+  "RUN_PITCH_ABLATION": true,
+  "SWEEP_SEEDS": [
+   0,
+   1,
+   2,
+   3,
+   4
+  ],
+  "CASES_HISTORICAL": [
+   [
+    11.5,
+    5
+   ]
+  ],
+  "NOISE_SEED": 1000,
+  "label_route": "residual from logs",
+  "metrics_units": {
+   "power_mae": "kW",
+   "speed_rmse": "rpm",
+   "torque_err": "kN m"
+  }
+ },
+ "manifest": {
+  "train": [
+   {
+    "case": "train-0",
+    "v_mean": 9.0,
+    "wind_seed": 1,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   },
+   {
+    "case": "train-1",
+    "v_mean": 9.0,
+    "wind_seed": 2,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   },
+   {
+    "case": "train-2",
+    "v_mean": 9.0,
+    "wind_seed": 3,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   }
+  ],
+  "val": [
+   {
+    "case": "val-0",
+    "v_mean": 9.0,
+    "wind_seed": 11,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   },
+   {
+    "case": "val-1",
+    "v_mean": 9.0,
+    "wind_seed": 12,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   }
+  ],
+  "test_same": [
+   {
+    "case": "test_same-0",
+    "v_mean": 9.0,
+    "wind_seed": 21,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   },
+   {
+    "case": "test_same-1",
+    "v_mean": 9.0,
+    "wind_seed": 22,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   }
+  ],
+  "test_transfer": [
+   {
+    "case": "test_transfer-0",
+    "v_mean": 11.5,
+    "wind_seed": 31,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   },
+   {
+    "case": "test_transfer-1",
+    "v_mean": 11.5,
+    "wind_seed": 32,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   }
+  ],
+  "historical": [
+   {
+    "case": "historical-0",
+    "v_mean": 11.5,
+    "wind_seed": 5,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   }
+  ],
+  "aug": [
+   {
+    "case": "aug-0",
+    "v_mean": 12.0,
+    "wind_seed": 41,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   },
+   {
+    "case": "aug-1",
+    "v_mean": 12.0,
+    "wind_seed": 42,
+    "TI": 0.08,
+    "tau": 25.0,
+    "n_samples": 2500,
+    "dt": 0.1,
+    "omega0": "min(lambda_opt v_0 / R, omega_rated)",
+    "beta0": 0.0,
+    "integrator": "explicit Euler"
+   }
+  ]
+ },
+ "regimes": {
+  "9/1": {
+   "role": "train",
+   "v_min": 7.105665966345208,
+   "v_max": 10.597907230036451,
+   "frac_pitch": 0.0,
+   "beta_max": 0.0,
+   "frac_out_train": 0.0,
+   "frac_out_aug": 0.0
+  },
+  "9/2": {
+   "role": "train",
+   "v_min": 7.021686024157793,
+   "v_max": 9.582219028484248,
+   "frac_pitch": 0.0,
+   "beta_max": 0.0,
+   "frac_out_train": 0.0,
+   "frac_out_aug": 0.0
+  },
+  "9/3": {
+   "role": "train",
+   "v_min": 8.08269330437056,
+   "v_max": 10.878455604826003,
+   "frac_pitch": 0.0,
+   "beta_max": 0.0,
+   "frac_out_train": 0.0,
+   "frac_out_aug": 0.0
+  },
+  "9/11": {
+   "role": "val",
+   "v_min": 7.758947916220522,
+   "v_max": 10.159176667077055,
+   "frac_pitch": 0.0,
+   "beta_max": 0.0,
+   "frac_out_train": 0.0,
+   "frac_out_aug": 0.0
+  },
+  "9/12": {
+   "role": "val",
+   "v_min": 8.360860887909963,
+   "v_max": 10.387286773335665,
+   "frac_pitch": 0.0,
+   "beta_max": 0.0,
+   "frac_out_train": 0.0,
+   "frac_out_aug": 0.0
+  },
+  "9/21": {
+   "role": "test_same",
+   "v_min": 7.461119210982863,
+   "v_max": 11.889922995246483,
+   "frac_pitch": 0.012,
+   "beta_max": 0.055570917716799145,
+   "frac_out_train": 0.2836,
+   "frac_out_aug": 0.0
+  },
+  "9/22": {
+   "role": "test_same",
+   "v_min": 7.643558543364069,
+   "v_max": 10.405629459721295,
+   "frac_pitch": 0.0,
+   "beta_max": 0.0,
+   "frac_out_train": 0.0,
+   "frac_out_aug": 0.0
+  },
+  "11.5/31": {
+   "role": "test_transfer",
+   "v_min": 9.57153849163416,
+   "v_max": 13.824900595315002,
+   "frac_pitch": 0.3976,
+   "beta_max": 4.807481679071597,
+   "frac_out_train": 0.9944,
+   "frac_out_aug": 0.0636
+  },
+  "11.5/32": {
+   "role": "test_transfer",
+   "v_min": 9.281055277708903,
+   "v_max": 13.75833554032777,
+   "frac_pitch": 0.4208,
+   "beta_max": 4.159613938258346,
+   "frac_out_train": 0.8312,
+   "frac_out_aug": 0.0264
+  },
+  "11.5/5": {
+   "role": "historical",
+   "v_min": 9.864448911101888,
+   "v_max": 13.567616559502357,
+   "frac_pitch": 0.736,
+   "beta_max": 3.314795403225629,
+   "frac_out_train": 1.0,
+   "frac_out_aug": 0.0024
+  },
+  "12/41": {
+   "role": "aug",
+   "v_min": 9.681748702551483,
+   "v_max": 13.612644229071812,
+   "frac_pitch": 0.6256,
+   "beta_max": 4.1750878682190145,
+   "frac_out_train": 0.9484,
+   "frac_out_aug": 0.0
+  },
+  "12/42": {
+   "role": "aug",
+   "v_min": 8.20077864517517,
+   "v_max": 12.735275314797114,
+   "frac_pitch": 0.4088,
+   "beta_max": 1.6187717524883347,
+   "frac_out_train": 0.8288,
+   "frac_out_aug": 0.0
+  }
+ },
+ "selected": {
+  "9 m/s": {
+   "train_cases": [
+    [
+     9.0,
+     1
+    ],
+    [
+     9.0,
+     2
+    ],
+    [
+     9.0,
+     3
+    ]
+   ],
+   "inputs": [
+    "omega",
+    "v",
+    "beta"
+   ],
+   "best_step": 3000,
+   "stopped_at": 3000,
+   "best_val_power_mae_kw": 0.07482485796383838,
+   "normalization": [
+    [
+     1.0943368823786945,
+     8.870445363150367,
+     0.0
+    ],
+    [
+     0.08708434158830343,
+     0.7800314380076875,
+     1.0
+    ],
+    [
+     -271932.7564744508
+    ],
+    [
+     46663.50153986882
+    ]
+   ]
+  },
+  "9 + 12 m/s": {
+   "train_cases": [
+    [
+     9.0,
+     1
+    ],
+    [
+     9.0,
+     2
+    ],
+    [
+     9.0,
+     3
+    ],
+    [
+     12.0,
+     41
+    ],
+    [
+     12.0,
+     42
+    ]
+   ],
+   "inputs": [
+    "omega",
+    "v",
+    "beta"
+   ],
+   "best_step": 3000,
+   "stopped_at": 3000,
+   "best_val_power_mae_kw": 0.08120412376614417,
+   "normalization": [
+    [
+     1.2074171153469593,
+     9.875463760795414,
+     0.20336372394167837
+    ],
+    [
+     0.16149899670664536,
+     1.4799530211807947,
+     1.0
+    ],
+    [
+     -330818.070403732
+    ],
+    [
+     86007.15153997634
+    ]
+   ]
+  },
+  "9 + 12 m/s, no pitch input": {
+   "train_cases": [
+    [
+     9.0,
+     1
+    ],
+    [
+     9.0,
+     2
+    ],
+    [
+     9.0,
+     3
+    ],
+    [
+     12.0,
+     41
+    ],
+    [
+     12.0,
+     42
+    ]
+   ],
+   "inputs": [
+    "omega",
+    "v"
+   ],
+   "best_step": 2500,
+   "stopped_at": 3000,
+   "best_val_power_mae_kw": 0.22634753742580066,
+   "normalization": [
+    [
+     1.2074171153469593,
+     9.875463760795414
+    ],
+    [
+     0.16149899670664536,
+     1.4799530211807947
+    ],
+    [
+     -330818.070403732
+    ],
+    [
+     86007.15153997634
+    ]
+   ]
+  }
+ },
+ "metrics": {
+  "9 m/s": [
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 1,
+    "pbm": {
+     "power_mae_kw": 302.39010939642327,
+     "speed_rmse_rpm": 0.45063719308858496,
+     "torque_err_knm": 272.9952783422534,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.08091897907869174,
+     "speed_rmse_rpm": 0.00015206139806300966,
+     "torque_err_knm": 0.15911922411931334,
+     "failed": false
+    }
+   },
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 2,
+    "pbm": {
+     "power_mae_kw": 253.01904695338578,
+     "speed_rmse_rpm": 0.42395387525367084,
+     "torque_err_knm": 243.61766701808398,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.08940459550285432,
+     "speed_rmse_rpm": 0.00022695569479789469,
+     "torque_err_knm": 0.16951330472683313,
+     "failed": false
+    }
+   },
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 3,
+    "pbm": {
+     "power_mae_kw": 372.8654179401726,
+     "speed_rmse_rpm": 0.48408328972846526,
+     "torque_err_knm": 312.2294337978537,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.07986460776851288,
+     "speed_rmse_rpm": 0.00012885034884887672,
+     "torque_err_knm": 0.19328736043507347,
+     "failed": false
+    }
+   },
+   {
+    "role": "val",
+    "v_mean": 9.0,
+    "wind_seed": 11,
+    "pbm": {
+     "power_mae_kw": 330.15606954369554,
+     "speed_rmse_rpm": 0.46509652393286655,
+     "torque_err_knm": 288.8392789244569,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.07271458779042707,
+     "speed_rmse_rpm": 0.00012958104494452546,
+     "torque_err_knm": 0.11807898458338172,
+     "failed": false
+    }
+   },
+   {
+    "role": "val",
+    "v_mean": 9.0,
+    "wind_seed": 12,
+    "pbm": {
+     "power_mae_kw": 341.67164876762524,
+     "speed_rmse_rpm": 0.470445159917616,
+     "torque_err_knm": 295.13088331744507,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.07693512813724969,
+     "speed_rmse_rpm": 0.00012999780961622432,
+     "torque_err_knm": 0.1273230536991182,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_same",
+    "v_mean": 9.0,
+    "wind_seed": 21,
+    "pbm": {
+     "power_mae_kw": 374.82782450007,
+     "speed_rmse_rpm": 0.47836624013710194,
+     "torque_err_knm": 327.7498096868583,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 2.6313712633845494,
+     "speed_rmse_rpm": 0.0065144782906597165,
+     "torque_err_knm": 5.61949281911631,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_same",
+    "v_mean": 9.0,
+    "wind_seed": 22,
+    "pbm": {
+     "power_mae_kw": 333.9624116498761,
+     "speed_rmse_rpm": 0.4667744564370118,
+     "torque_err_knm": 291.4486377363909,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.07548152541035089,
+     "speed_rmse_rpm": 0.00012706983562668593,
+     "torque_err_knm": 0.12751467788284468,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_transfer",
+    "v_mean": 11.5,
+    "wind_seed": 31,
+    "pbm": {
+     "power_mae_kw": 316.49490206552724,
+     "speed_rmse_rpm": 0.39405901853258085,
+     "torque_err_knm": 392.0032652323581,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 11.109568347285242,
+     "speed_rmse_rpm": 0.017205411495817127,
+     "torque_err_knm": 16.546571122639463,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_transfer",
+    "v_mean": 11.5,
+    "wind_seed": 32,
+    "pbm": {
+     "power_mae_kw": 307.0878793011781,
+     "speed_rmse_rpm": 0.3953730387582502,
+     "torque_err_knm": 387.74376650358766,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 9.249252504809535,
+     "speed_rmse_rpm": 0.014330492515457227,
+     "torque_err_knm": 16.08743499504107,
+     "failed": false
+    }
+   },
+   {
+    "role": "historical",
+    "v_mean": 11.5,
+    "wind_seed": 5,
+    "pbm": {
+     "power_mae_kw": 178.4952160849468,
+     "speed_rmse_rpm": 0.2774895246591447,
+     "torque_err_knm": 389.76754809093103,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 11.542430718527918,
+     "speed_rmse_rpm": 0.017774937774821916,
+     "torque_err_knm": 20.836758087338556,
+     "failed": false
+    }
+   }
+  ],
+  "9 + 12 m/s": [
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 1,
+    "pbm": {
+     "power_mae_kw": 302.39010939642327,
+     "speed_rmse_rpm": 0.45063719308858496,
+     "torque_err_knm": 272.9952783422534,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.11917951804613713,
+     "speed_rmse_rpm": 0.0002685940527567347,
+     "torque_err_knm": 0.2829913896107652,
+     "failed": false
+    }
+   },
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 2,
+    "pbm": {
+     "power_mae_kw": 253.01904695338578,
+     "speed_rmse_rpm": 0.42395387525367084,
+     "torque_err_knm": 243.61766701808398,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.21144778005494913,
+     "speed_rmse_rpm": 0.0005320194917406163,
+     "torque_err_knm": 0.4078697124059034,
+     "failed": false
+    }
+   },
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 3,
+    "pbm": {
+     "power_mae_kw": 372.8654179401726,
+     "speed_rmse_rpm": 0.48408328972846526,
+     "torque_err_knm": 312.2294337978537,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.06602333866256475,
+     "speed_rmse_rpm": 0.00011440901404026916,
+     "torque_err_knm": 0.13110350573126042,
+     "failed": false
+    }
+   },
+   {
+    "role": "val",
+    "v_mean": 9.0,
+    "wind_seed": 11,
+    "pbm": {
+     "power_mae_kw": 330.15606954369554,
+     "speed_rmse_rpm": 0.46509652393286655,
+     "torque_err_knm": 288.8392789244569,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.084529971584641,
+     "speed_rmse_rpm": 0.00016939994093970203,
+     "torque_err_knm": 0.1533091098255866,
+     "failed": false
+    }
+   },
+   {
+    "role": "val",
+    "v_mean": 9.0,
+    "wind_seed": 12,
+    "pbm": {
+     "power_mae_kw": 341.67164876762524,
+     "speed_rmse_rpm": 0.470445159917616,
+     "torque_err_knm": 295.13088331744507,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.07787827594764735,
+     "speed_rmse_rpm": 0.00012948722152431602,
+     "torque_err_knm": 0.11031593604872837,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_same",
+    "v_mean": 9.0,
+    "wind_seed": 21,
+    "pbm": {
+     "power_mae_kw": 374.82782450007,
+     "speed_rmse_rpm": 0.47836624013710194,
+     "torque_err_knm": 327.7498096868583,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.1420094132209139,
+     "speed_rmse_rpm": 0.0002794067092477229,
+     "torque_err_knm": 0.3182290279004172,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_same",
+    "v_mean": 9.0,
+    "wind_seed": 22,
+    "pbm": {
+     "power_mae_kw": 333.9624116498761,
+     "speed_rmse_rpm": 0.4667744564370118,
+     "torque_err_knm": 291.4486377363909,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.1242024324658269,
+     "speed_rmse_rpm": 0.0002521398268124193,
+     "torque_err_knm": 0.19347823880015058,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_transfer",
+    "v_mean": 11.5,
+    "wind_seed": 31,
+    "pbm": {
+     "power_mae_kw": 316.49490206552724,
+     "speed_rmse_rpm": 0.39405901853258085,
+     "torque_err_knm": 392.0032652323581,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.45595424688751807,
+     "speed_rmse_rpm": 0.0011281161161545608,
+     "torque_err_knm": 1.175146940863689,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_transfer",
+    "v_mean": 11.5,
+    "wind_seed": 32,
+    "pbm": {
+     "power_mae_kw": 307.0878793011781,
+     "speed_rmse_rpm": 0.3953730387582502,
+     "torque_err_knm": 387.74376650358766,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.3022751773792911,
+     "speed_rmse_rpm": 0.0007535341066136783,
+     "torque_err_knm": 0.8994042428755841,
+     "failed": false
+    }
+   },
+   {
+    "role": "historical",
+    "v_mean": 11.5,
+    "wind_seed": 5,
+    "pbm": {
+     "power_mae_kw": 178.4952160849468,
+     "speed_rmse_rpm": 0.2774895246591447,
+     "torque_err_knm": 389.76754809093103,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.4616682342160406,
+     "speed_rmse_rpm": 0.0008954062213624311,
+     "torque_err_knm": 1.0172770154950714,
+     "failed": false
+    }
+   }
+  ],
+  "9 + 12 m/s, no pitch input": [
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 1,
+    "pbm": {
+     "power_mae_kw": 302.39010939642327,
+     "speed_rmse_rpm": 0.45063719308858496,
+     "torque_err_knm": 272.9952783422534,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.3697081060584628,
+     "speed_rmse_rpm": 0.0007337333112618235,
+     "torque_err_knm": 0.7075975143058542,
+     "failed": false
+    }
+   },
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 2,
+    "pbm": {
+     "power_mae_kw": 253.01904695338578,
+     "speed_rmse_rpm": 0.42395387525367084,
+     "torque_err_knm": 243.61766701808398,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.46240030572937574,
+     "speed_rmse_rpm": 0.0011126354885007679,
+     "torque_err_knm": 0.854964077370429,
+     "failed": false
+    }
+   },
+   {
+    "role": "train",
+    "v_mean": 9.0,
+    "wind_seed": 3,
+    "pbm": {
+     "power_mae_kw": 372.8654179401726,
+     "speed_rmse_rpm": 0.48408328972846526,
+     "torque_err_knm": 312.2294337978537,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.3480365657471843,
+     "speed_rmse_rpm": 0.0005832046583141277,
+     "torque_err_knm": 0.6481815765877408,
+     "failed": false
+    }
+   },
+   {
+    "role": "val",
+    "v_mean": 9.0,
+    "wind_seed": 11,
+    "pbm": {
+     "power_mae_kw": 330.15606954369554,
+     "speed_rmse_rpm": 0.46509652393286655,
+     "torque_err_knm": 288.8392789244569,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.23022952115152842,
+     "speed_rmse_rpm": 0.0005221454463972823,
+     "torque_err_knm": 0.44261539051808235,
+     "failed": false
+    }
+   },
+   {
+    "role": "val",
+    "v_mean": 9.0,
+    "wind_seed": 12,
+    "pbm": {
+     "power_mae_kw": 341.67164876762524,
+     "speed_rmse_rpm": 0.470445159917616,
+     "torque_err_knm": 295.13088331744507,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.2224655537000729,
+     "speed_rmse_rpm": 0.0003814596665762893,
+     "torque_err_knm": 0.39267569139131003,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_same",
+    "v_mean": 9.0,
+    "wind_seed": 21,
+    "pbm": {
+     "power_mae_kw": 374.82782450007,
+     "speed_rmse_rpm": 0.47836624013710194,
+     "torque_err_knm": 327.7498096868583,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 1.1437592132250023,
+     "speed_rmse_rpm": 0.0026066446736692367,
+     "torque_err_knm": 2.7004010141825536,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_same",
+    "v_mean": 9.0,
+    "wind_seed": 22,
+    "pbm": {
+     "power_mae_kw": 333.9624116498761,
+     "speed_rmse_rpm": 0.4667744564370118,
+     "torque_err_knm": 291.4486377363909,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 0.29023960209119964,
+     "speed_rmse_rpm": 0.0005544335355603074,
+     "torque_err_knm": 0.5289515636253354,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_transfer",
+    "v_mean": 11.5,
+    "wind_seed": 31,
+    "pbm": {
+     "power_mae_kw": 316.49490206552724,
+     "speed_rmse_rpm": 0.39405901853258085,
+     "torque_err_knm": 392.0032652323581,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 9.949533223857035,
+     "speed_rmse_rpm": 0.02243838857379161,
+     "torque_err_knm": 21.192140375119447,
+     "failed": false
+    }
+   },
+   {
+    "role": "test_transfer",
+    "v_mean": 11.5,
+    "wind_seed": 32,
+    "pbm": {
+     "power_mae_kw": 307.0878793011781,
+     "speed_rmse_rpm": 0.3953730387582502,
+     "torque_err_knm": 387.74376650358766,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 8.697110511375028,
+     "speed_rmse_rpm": 0.019421596536498584,
+     "torque_err_knm": 20.687306187371874,
+     "failed": false
+    }
+   },
+   {
+    "role": "historical",
+    "v_mean": 11.5,
+    "wind_seed": 5,
+    "pbm": {
+     "power_mae_kw": 178.4952160849468,
+     "speed_rmse_rpm": 0.2774895246591447,
+     "torque_err_knm": 389.76754809093103,
+     "failed": false
+    },
+    "costa": {
+     "power_mae_kw": 8.065489330444302,
+     "speed_rmse_rpm": 0.0143606021071619,
+     "torque_err_knm": 21.77480566261443,
+     "failed": false
+    }
+   }
+  ]
+ },
+ "alpha_check": {
+  "case": "9/21",
+  "alphas": [
+   0.0,
+   0.25,
+   0.5,
+   0.75,
+   1.0
+  ],
+  "power_mae_kw": [
+   374.82782450007,
+   287.983990143602,
+   197.56287123878028,
+   101.40461974235261,
+   2.6313712633845494
+  ]
+ },
+ "seed_sweep": {
+  "9 m/s": {
+   "validation power_mae_kw": {
+    "median": 0.06936780146727269,
+    "min": 0.04076681678826352,
+    "max": 0.07482485796383838,
+    "n_nonfinite": 0
+   },
+   "9/21 power_mae_kw": {
+    "median": 2.4562988797298977,
+    "min": 1.8656003446672182,
+    "max": 2.887527604410693,
+    "n_nonfinite": 0
+   },
+   "9/21 speed_rmse_rpm": {
+    "median": 0.006019734689235995,
+    "min": 0.004788341132640021,
+    "max": 0.00683660490282926,
+    "n_nonfinite": 0
+   },
+   "9/21 torque_err_knm": {
+    "median": 5.221169771566178,
+    "min": 4.241627609355931,
+    "max": 5.809721603110988,
+    "n_nonfinite": 0
+   },
+   "9/22 power_mae_kw": {
+    "median": 0.06896097405083143,
+    "min": 0.04915635611934149,
+    "max": 0.09993403053141962,
+    "n_nonfinite": 0
+   },
+   "9/22 speed_rmse_rpm": {
+    "median": 0.00012706983562668593,
+    "min": 9.084536717873185e-05,
+    "max": 0.0001840180649820349,
+    "n_nonfinite": 0
+   },
+   "9/22 torque_err_knm": {
+    "median": 0.12751467788284468,
+    "min": 0.10363083234104561,
+    "max": 0.16255519834227564,
+    "n_nonfinite": 0
+   },
+   "11.5/31 power_mae_kw": {
+    "median": 12.538662161873598,
+    "min": 11.109568347285242,
+    "max": 13.227957939376827,
+    "n_nonfinite": 0
+   },
+   "11.5/31 speed_rmse_rpm": {
+    "median": 0.02338346596694417,
+    "min": 0.017205411495817127,
+    "max": 0.026332135517505555,
+    "n_nonfinite": 0
+   },
+   "11.5/31 torque_err_knm": {
+    "median": 17.270664032250064,
+    "min": 16.546571122639463,
+    "max": 25.751035768964304,
+    "n_nonfinite": 0
+   },
+   "11.5/32 power_mae_kw": {
+    "median": 9.649451313403851,
+    "min": 8.774627365856894,
+    "max": 12.446578938530424,
+    "n_nonfinite": 0
+   },
+   "11.5/32 speed_rmse_rpm": {
+    "median": 0.015670326774683874,
+    "min": 0.01423244603188135,
+    "max": 0.02699027442137812,
+    "n_nonfinite": 0
+   },
+   "11.5/32 torque_err_knm": {
+    "median": 16.08743499504107,
+    "min": 15.020757105325682,
+    "max": 21.962884961441752,
+    "n_nonfinite": 0
+   },
+   "11.5/5 power_mae_kw": {
+    "median": 11.542430718527918,
+    "min": 8.971580900908661,
+    "max": 14.113419620463471,
+    "n_nonfinite": 0
+   },
+   "11.5/5 speed_rmse_rpm": {
+    "median": 0.017774937774821916,
+    "min": 0.013773097440945173,
+    "max": 0.026332025741777444,
+    "n_nonfinite": 0
+   },
+   "11.5/5 torque_err_knm": {
+    "median": 20.836758087338556,
+    "min": 16.53350714981562,
+    "max": 30.692475014251045,
+    "n_nonfinite": 0
+   },
+   "failed rollouts": 0,
+   "selected steps": [
+    3000,
+    3000,
+    3000,
+    3000,
+    3000
+   ]
+  },
+  "9 + 12 m/s": {
+   "validation power_mae_kw": {
+    "median": 0.08120412376614417,
+    "min": 0.03154227346405452,
+    "max": 0.576775566480715,
+    "n_nonfinite": 0
+   },
+   "9/21 power_mae_kw": {
+    "median": 0.14714649334881427,
+    "min": 0.12419150949285114,
+    "max": 0.7607049415347927,
+    "n_nonfinite": 0
+   },
+   "9/21 speed_rmse_rpm": {
+    "median": 0.0002794067092477229,
+    "min": 0.00020687625897123548,
+    "max": 0.001502399354294132,
+    "n_nonfinite": 0
+   },
+   "9/21 torque_err_knm": {
+    "median": 0.3182290279004172,
+    "min": 0.2193063196194462,
+    "max": 1.5149155879875087,
+    "n_nonfinite": 0
+   },
+   "9/22 power_mae_kw": {
+    "median": 0.1242024324658269,
+    "min": 0.046647613291072566,
+    "max": 0.5197909215384868,
+    "n_nonfinite": 0
+   },
+   "9/22 speed_rmse_rpm": {
+    "median": 0.0002160082965746385,
+    "min": 9.76810580925667e-05,
+    "max": 0.0008524200337189288,
+    "n_nonfinite": 0
+   },
+   "9/22 torque_err_knm": {
+    "median": 0.19347823880015058,
+    "min": 0.09841252497611164,
+    "max": 0.9671782513084067,
+    "n_nonfinite": 0
+   },
+   "11.5/31 power_mae_kw": {
+    "median": 0.7115846111492506,
+    "min": 0.45595424688751807,
+    "max": 1.0272599846213128,
+    "n_nonfinite": 0
+   },
+   "11.5/31 speed_rmse_rpm": {
+    "median": 0.0014873547680729574,
+    "min": 0.0011281161161545608,
+    "max": 0.0029128166658619436,
+    "n_nonfinite": 0
+   },
+   "11.5/31 torque_err_knm": {
+    "median": 1.6700786660775488,
+    "min": 1.175146940863689,
+    "max": 2.2890117723655656,
+    "n_nonfinite": 0
+   },
+   "11.5/32 power_mae_kw": {
+    "median": 0.4236633630179705,
+    "min": 0.3022751773792911,
+    "max": 0.7229774600660183,
+    "n_nonfinite": 0
+   },
+   "11.5/32 speed_rmse_rpm": {
+    "median": 0.0008971477618934226,
+    "min": 0.0007535341066136783,
+    "max": 0.0014054377903036808,
+    "n_nonfinite": 0
+   },
+   "11.5/32 torque_err_knm": {
+    "median": 1.3353093256220605,
+    "min": 0.8994042428755841,
+    "max": 1.658660983156467,
+    "n_nonfinite": 0
+   },
+   "11.5/5 power_mae_kw": {
+    "median": 0.5989284995570511,
+    "min": 0.4616682342160406,
+    "max": 0.8991468166647191,
+    "n_nonfinite": 0
+   },
+   "11.5/5 speed_rmse_rpm": {
+    "median": 0.0012784687856918014,
+    "min": 0.0008954062213624311,
+    "max": 0.0014019371629793121,
+    "n_nonfinite": 0
+   },
+   "11.5/5 torque_err_knm": {
+    "median": 1.4534762281681046,
+    "min": 1.0172770154950714,
+    "max": 1.9666930113128858,
+    "n_nonfinite": 0
+   },
+   "failed rollouts": 0,
+   "selected steps": [
+    3000,
+    3000,
+    3000,
+    3000,
+    3000
+   ]
+  },
+  "9 + 12 m/s, no pitch input": {
+   "validation power_mae_kw": {
+    "median": 0.19172857332377494,
+    "min": 0.15996845706520757,
+    "max": 0.23910364489496339,
+    "n_nonfinite": 0
+   },
+   "9/21 power_mae_kw": {
+    "median": 1.2048082562306188,
+    "min": 1.075084628946599,
+    "max": 1.4290387439214698,
+    "n_nonfinite": 0
+   },
+   "9/21 speed_rmse_rpm": {
+    "median": 0.0027332545043120054,
+    "min": 0.002598079673472216,
+    "max": 0.002929503166759998,
+    "n_nonfinite": 0
+   },
+   "9/21 torque_err_knm": {
+    "median": 2.7958030893613097,
+    "min": 2.7004010141825536,
+    "max": 3.1586830632916203,
+    "n_nonfinite": 0
+   },
+   "9/22 power_mae_kw": {
+    "median": 0.2366501362663907,
+    "min": 0.1795069665758141,
+    "max": 0.34235858194057606,
+    "n_nonfinite": 0
+   },
+   "9/22 speed_rmse_rpm": {
+    "median": 0.0004995355060376492,
+    "min": 0.0003354111556984795,
+    "max": 0.0006865107608975372,
+    "n_nonfinite": 0
+   },
+   "9/22 torque_err_knm": {
+    "median": 0.4848544128530847,
+    "min": 0.3949473912211896,
+    "max": 0.693313261944257,
+    "n_nonfinite": 0
+   },
+   "11.5/31 power_mae_kw": {
+    "median": 10.461480973072405,
+    "min": 9.949533223857035,
+    "max": 10.78488911267357,
+    "n_nonfinite": 0
+   },
+   "11.5/31 speed_rmse_rpm": {
+    "median": 0.023705631790733785,
+    "min": 0.02243838857379161,
+    "max": 0.024681875536608836,
+    "n_nonfinite": 0
+   },
+   "11.5/31 torque_err_knm": {
+    "median": 21.263382805356734,
+    "min": 20.969036198488247,
+    "max": 21.56884527034115,
+    "n_nonfinite": 0
+   },
+   "11.5/32 power_mae_kw": {
+    "median": 8.991646612518315,
+    "min": 8.697110511375028,
+    "max": 9.152459029301758,
+    "n_nonfinite": 0
+   },
+   "11.5/32 speed_rmse_rpm": {
+    "median": 0.019539915718738053,
+    "min": 0.019421596536498584,
+    "max": 0.01977120225608192,
+    "n_nonfinite": 0
+   },
+   "11.5/32 torque_err_knm": {
+    "median": 20.73921451161854,
+    "min": 20.67445310568179,
+    "max": 20.972305710876473,
+    "n_nonfinite": 0
+   },
+   "11.5/5 power_mae_kw": {
+    "median": 8.817877784412513,
+    "min": 8.065489330444302,
+    "max": 8.875727464430318,
+    "n_nonfinite": 0
+   },
+   "11.5/5 speed_rmse_rpm": {
+    "median": 0.015089211204171971,
+    "min": 0.0143606021071619,
+    "max": 0.015232007505265825,
+    "n_nonfinite": 0
+   },
+   "11.5/5 torque_err_knm": {
+    "median": 22.182813876080353,
+    "min": 21.77480566261443,
+    "max": 22.38422994344443,
+    "n_nonfinite": 0
+   },
+   "failed rollouts": 0,
+   "selected steps": [
+    2500,
+    2000,
+    2500,
+    1000,
+    3000
+   ]
+  }
+ }
+}
