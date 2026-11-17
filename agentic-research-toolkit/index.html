@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>From Idea to Report</title>
+<style>
+:root{
+  --bg:#f7f6f2; --card:#ffffff; --ink:#1d1d1b; --muted:#5f5e58; --line:#e3e1d9;
+  --accent:#1f5fa8; --accent-soft:#e6eef8; --check:#b5541c; --check-soft:#fbeee4;
+  --ok:#2f7a4a; --code:#f0eee8;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#16171a; --card:#1f2024; --ink:#ecebe6; --muted:#a3a29b; --line:#33343a;
+    --accent:#7fb0ea; --accent-soft:#1f2b3a; --check:#f0a26e; --check-soft:#3a2a1f;
+    --ok:#7fcf98; --code:#2a2b30;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:880px;margin:0 auto;padding:0 16px}
+header{padding:56px 0 24px}
+.kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+h1{font-size:clamp(30px,5vw,44px);line-height:1.15;margin:0 0 14px;letter-spacing:-.01em}
+.lede{font-size:19px;color:var(--muted);margin:0;max-width:640px}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:18px;overflow-x:auto;padding-top:10px;padding-bottom:10px;white-space:nowrap}
+nav a{text-decoration:none;color:var(--muted);font-size:14px}
+nav a:hover{color:var(--ink)}
+section{padding:36px 0 8px}
+h2{font-size:24px;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.steps{display:grid;gap:12px;counter-reset:s}
+.step{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:start}
+.num{width:36px;height:36px;border-radius:50%;background:var(--accent);color:var(--bg);
+  display:flex;align-items:center;justify-content:center;font-weight:700}
+.step h3{margin:4px 0 4px;font-size:17px}
+.step p{margin:0 0 8px;color:var(--muted)}
+pre{position:relative;margin:6px 0 0;background:var(--code);border-radius:8px;padding:10px 64px 10px 12px;
+  overflow-x:auto;font:14px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em;background:var(--code);padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+.copy{position:absolute;top:6px;right:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  border-radius:6px;font-size:12px;padding:3px 8px;cursor:pointer}
+.copy:hover{border-color:var(--accent)}
+.tabs{display:flex;gap:6px;margin-top:6px}
+.tab{border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:6px;padding:3px 10px;font-size:13px;cursor:pointer}
+.tab[aria-selected=true]{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+/* timeline */
+.progress{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px;color:var(--muted);font-size:14px;gap:12px;flex-wrap:wrap}
+.bar{flex:1;min-width:140px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .25s}
+.phase{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
+details.stage{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:0 0 8px}
+details.stage.cp{border-color:var(--check)}
+details.stage summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto 34px 1fr auto;
+  gap:12px;align-items:center;padding:12px 14px}
+details.stage summary::-webkit-details-marker{display:none}
+.tick{width:20px;height:20px;accent-color:var(--ok);cursor:pointer;margin:0}
+.sn{font:600 13px ui-monospace,Menlo,monospace;color:var(--muted)}
+.st{font-weight:600}
+.st small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+.badge{font-size:12px;font-weight:700;color:var(--check);background:var(--check-soft);border-radius:999px;padding:2px 9px;white-space:nowrap}
+.chev{color:var(--muted);transition:transform .2s;font-size:13px}
+details[open] .chev{transform:rotate(90deg)}
+.body{padding:0 16px 14px 66px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.body h4{margin:0 0 4px;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.body h4 code{text-transform:none;letter-spacing:0;color:var(--ink)}
+.body ul{margin:0;padding-left:18px}
+.body .full{grid-column:1/-1}
+.done .st{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--line)}
+/* checkpoints */
+.cps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.cpcard{background:var(--check-soft);border-radius:12px;padding:16px}
+.cpcard b{display:block;color:var(--check);font-size:28px;line-height:1}
+.cpcard h3{margin:6px 0 6px;font-size:16px}
+.cpcard p{margin:0 0 8px;font-size:15px}
+.cpcard em{color:var(--muted);font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid2>*,.cps>*,.step>*,.body>*{min-width:0}
+.cmd p{margin:0 0 6px;font-weight:600}
+.cmd pre{white-space:pre-wrap;overflow-wrap:anywhere}
+table{border-collapse:collapse;width:100%;font-size:15px}
+td,th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600}
+.dos li{margin-bottom:6px}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0}
+
+.tabpanel[hidden]{display:none}
+.tabpanel ol{margin:10px 0 0;padding-left:22px}
+.tabpanel li{margin-bottom:8px}
+.fields{display:grid;grid-template-columns:1fr 1.6fr;gap:12px;margin:0 0 6px}
+.fields label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.fields input{width:100%;font:14px ui-monospace,Menlo,Consolas,monospace;padding:8px 10px;border-radius:8px;
+  border:1px solid var(--line);background:var(--code);color:var(--ink)}
+.fields input:focus{outline:2px solid var(--accent);outline-offset:0}
+.prompt pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.label{font-weight:600;margin:14px 0 2px}
+.small{font-size:14px;color:var(--muted)}
+@media (max-width:640px){.fields{grid-template-columns:1fr}}
+footer{padding:40px 0 60px;color:var(--muted);font-size:14px}
+@media (max-width:640px){
+  .cps,.grid2{grid-template-columns:1fr}
+  .body{grid-template-columns:1fr;padding-left:16px}
+  details.stage summary{grid-template-columns:auto 28px 1fr auto}
+  .chev{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <p class="kicker">TTK29 · Agentic research workflow</p>
+  <h1>From an idea to a reviewed report</h1>
+  <p class="lede">Write your idea on one or two pages. An AI agent takes it through
+  11 research stages using the methods from this course. <strong>You make the
+  decisions; the agent does the legwork.</strong></p>
+</header>
+
+<nav><div class="wrap">
+  <a href="#setup">1 · Set up</a><a href="#idea">2 · Write your idea</a><a href="#run">3 · Run it</a>
+  <a href="#stages">Stages</a><a href="#checkpoints">Checkpoints</a><a href="#commands">More prompts</a>
+  <a href="#rules">Rules</a><a href="#files">Files</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="setup">
+  <h2>1 · Set up (once)</h2>
+  <p class="sub">About 20 minutes. You need the course folder, the Python environment, and Claude <em>or</em> ChatGPT.</p>
+  <div class="steps">
+    <div class="step card"><div class="num">a</div><div>
+      <h3>Get the course folder and the Python environment</h3>
+      <p>Download the course folder <code>TTK29-2026</code> (from the course page). Install
+      <a href="https://conda-forge.org/download/">Miniforge</a> (or Anaconda) if you don't have conda.
+      Then open a terminal in <code>TTK29-2026</code> and run:</p>
+      <pre><code>conda env create -f python/environment.yml</code></pre>
+    </div></div>
+
+    <div class="step card"><div class="num">b</div><div>
+      <h3>Set up your AI app</h3>
+      <div class="tabs" role="tablist" data-group="app">
+        <button class="tab" role="tab" aria-selected="true" data-tab="claude">Claude</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="codex">ChatGPT · Codex</button>
+      </div>
+      <div class="tabpanel" data-panel="claude"><ol>
+        <li>You need a paid Claude plan (Pro or higher).</li>
+        <li>Download the <a href="https://claude.com/download">Claude desktop app</a> (macOS or Windows), install it and sign in.</li>
+        <li><strong>Windows only:</strong> install <a href="https://git-scm.com/downloads">Git for Windows</a>, then quit and reopen Claude.</li>
+        <li>Click the <strong>Code</strong> tab. Under the message box, pick <strong>Local</strong> in the environment selector,
+          then click the folder button → <strong>Open folder…</strong> and choose
+          <code>TTK29-2026/agentic-research-toolkit</code>.</li>
+        <li>Set the permission mode to <strong>Accept edits</strong>. Claude can then write files, and still asks before running commands.</li>
+      </ol></div>
+      <div class="tabpanel" data-panel="codex" hidden><ol>
+        <li>You need a ChatGPT plan that includes Codex (Plus or higher).</li>
+        <li>Download the <a href="https://chatgpt.com/download">ChatGPT desktop app</a> (macOS or Windows), install it and sign in.</li>
+        <li>Switch to <strong>Codex</strong>, start a <strong>New chat</strong> and open the folder
+          <code>TTK29-2026/agentic-research-toolkit</code>.</li>
+        <li>Codex reads <code>AGENTS.md</code> in that folder automatically. Approve when it asks to run Python or use the web.</li>
+      </ol></div>
+      <p class="small" style="margin-top:8px">Always open the <code>agentic-research-toolkit</code> folder itself. The agents live there, and they read the course slides and notebooks one folder up.</p>
+    </div></div>
+
+    <div class="step card prompt"><div class="num">c</div><div>
+      <h3>Check that everything works</h3>
+      <p>Paste this into the chat:</p>
+      <pre><code>Read AGENTS.md. Then check my setup and answer with a short table (check · OK? · how to fix):
+1. Can you see the nine agent files in .claude/agents/?
+2. Can you read ../slides/L00_Introduction.pdf and ../python/environment.yml?
+3. Does the conda environment ham4digitaltwin exist? (run: conda env list)
+4. Can you search the web?
+Do not start any research yet.</code></pre>
+    </div></div>
+  </div>
+</section>
+
+<section id="idea">
+  <h2>2 · Write your idea PDF</h2>
+  <p class="sub">One or two pages is enough. Use these headings — the agent sharpens the rest in stage 01. Save it as a PDF in the <code>agentic-research-toolkit</code> folder.</p>
+  <div class="card">
+    <table>
+      <tr><th style="width:34%">Heading</th><th>Write about</th></tr>
+      <tr><td><strong>The problem</strong></td><td>What do you want to find out, predict or build? Why does it matter?</td></tr>
+      <tr><td><strong>The system</strong></td><td>Heat rod, vessel, wind turbine, flow…? What is known: equations, parameters, data?</td></tr>
+      <tr><td><strong>Course connections</strong></td><td>Which lectures or notebooks seem relevant (PBM, DDM, PINN, CoSTA, sensing, equation discovery)?</td></tr>
+      <tr><td><strong>A possible comparison</strong></td><td>What would you compare against what? What would a simple baseline be?</td></tr>
+      <tr><td><strong>What you don't know</strong></td><td>Open questions. It's fine to have many.</td></tr>
+      <tr><td><strong>Constraints</strong></td><td>Time, laptop compute, data you have access to.</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="run">
+  <h2>3 · Run it — copy and paste</h2>
+  <p class="sub">Fill in these two boxes once. Every prompt on this page updates to match.</p>
+  <div class="card">
+    <div class="fields">
+      <div><label for="f-topic">Project name (short, no spaces)</label><input id="f-topic" value="my-topic" spellcheck="false"></div>
+      <div><label for="f-pdf">Your idea PDF (inside the toolkit folder, or a full path)</label><input id="f-pdf" value="my-idea.pdf" spellcheck="false"></div>
+    </div>
+    <p class="small">No idea yet? Use <code>examples/sensor-placement/ideafile.pdf</code> (<a href="examples/sensor-placement/ideafile.pdf">open it</a>).</p>
+  </div>
+
+  <div class="prompt">
+    <p class="label">Option 1 — let the agents run (recommended)</p>
+    <pre><code data-tpl="Read AGENTS.md. Run the full research pipeline on my idea {pdf}, following .claude/skills/research/SKILL.md. Use the project folder projects/{topic}/. After each stage, tell me in a few lines what you did and what I should read. Stop at checkpoints A, B and C and wait for my answer."></code></pre>
+    <p class="small">Shortcut: type <code data-tpl="/research {pdf}"></code> in Claude, or <code data-tpl="$research {pdf}"></code> in Codex.</p>
+
+    <p class="label">At the checkpoints, reply in your own words</p>
+    <pre><code>Checkpoint A: I choose research question ___ because ___.</code></pre>
+    <pre><code>Checkpoint B: I choose solution ___ (plus the baseline) because ___.</code></pre>
+    <pre><code>Checkpoint C: In my own words, the main result is ___. Its biggest limitation is ___.</code></pre>
+
+    <p class="label">Continue another day (new chat)</p>
+    <pre><code data-tpl="Read AGENTS.md and projects/{topic}/README.md. Continue the research pipeline from the first unfinished stage, following .claude/skills/research/SKILL.md. Stop at the next checkpoint."></code></pre>
+
+    <p class="label">Option 2 — one agent at a time</p>
+    <p class="small">Open a stage below and copy its prompt. Paste them in order, in the same chat.
+    In Codex the agent's instructions are followed in the same chat instead of by a separate agent — that is expected.</p>
+  </div>
+</section>
+
+<section id="stages">
+  <h2>The 11 stages</h2>
+  <p class="sub">Each stage is done by one agent. Click a stage to see what happens and to copy its prompt. Tick it off as you go — your ticks are remembered in this browser.</p>
+  <div class="progress"><span id="ptext">0 of 11 done</span><div class="bar"><i id="pbar"></i></div>
+    <button class="copy" style="position:static" id="reset">Reset ticks</button></div>
+  <div id="timeline"></div>
+</section>
+
+<section id="checkpoints">
+  <h2>The three checkpoints</h2>
+  <p class="sub">The agent stops and waits for you. Your answers — and your reasons — are what you are assessed on.</p>
+  <div class="cps">
+    <div class="cpcard"><b>A</b><h3>Choose your question</h3>
+      <p>After the critic has attacked the research questions (stage 05).</p>
+      <em>Ask yourself: can I answer it with one experiment? Is the baseline fair?</em></div>
+    <div class="cpcard"><b>B</b><h3>Choose your solution</h3>
+      <p>After seeing at least 3 approaches from the course (stage 06).</p>
+      <em>Ask yourself: do I understand the notebook it builds on? Can it run on my laptop?</em></div>
+    <div class="cpcard"><b>C</b><h3>Explain the result</h3>
+      <p>After the critic has challenged your results (stage 09).</p>
+      <em>Say it in your own words: what did you find, and what is its biggest limitation?</em></div>
+  </div>
+</section>
+
+<section id="commands">
+  <h2>More prompts</h2>
+  <p class="sub">It's a conversation — steer at any point. These use your project name from above.</p>
+  <div class="grid2">
+    <div class="card cmd"><p>Redo a stage</p><pre><code>Redo stage 06 and add a solution based on PINNs. Keep the other solutions.</code></pre></div>
+    <div class="card cmd"><p>Go back</p><pre><code>The critique is right. Go back to stage 04 and revise the research questions.</code></pre></div>
+    <div class="card cmd"><p>Understand something</p><pre><code>Explain solution 2 in 06_solutions.md as if I missed the lecture. Point me to the notebook and slides.</code></pre></div>
+    <div class="card cmd"><p>Check the evidence</p><pre><code data-tpl="For every number in projects/{topic}/10_report.md, show the file in runs/ it comes from."></code></pre></div>
+    <div class="card cmd"><p>Push back</p><pre><code>I disagree with the gap in 03_gap.md: paper ___ already does this. Check it and revise.</code></pre></div>
+    <div class="card cmd"><p>See what an agent does</p><pre><code>Explain in five lines what .claude/agents/critic.md tells the critic to do.</code></pre></div>
+    <div class="card cmd"><p>Where are we?</p><pre><code data-tpl="Read projects/{topic}/README.md and tell me which stages are done, what I decided, and what comes next."></code></pre></div>
+    <div class="card cmd"><p>Get a second opinion</p><pre><code data-tpl="Run the critic agent (.claude/agents/critic.md) on projects/{topic}/06_solutions.md. Is my choice of solution sensible?"></code></pre></div>
+  </div>
+</section>
+
+<section id="rules">
+  <h2>Rules of the game</h2>
+  <div class="grid2">
+    <div class="card"><h3 style="margin-top:0">The agent must</h3><ul class="dos">
+      <li>Build solutions on <strong>course material</strong> and name the notebook and slide pages.</li>
+      <li>Cite only papers it actually found, with a working link.</li>
+      <li>Take every number from code that actually ran (<code>runs/</code>).</li>
+      <li>Report failures and negative results honestly.</li>
+      <li>Say so when it cannot search or run code — never fake it.</li>
+    </ul></div>
+    <div class="card"><h3 style="margin-top:0">You should</h3><ul class="dos">
+      <li>Read each stage file before moving on — at least the summary.</li>
+      <li>Open two or three of the papers yourself.</li>
+      <li>Read the code in <code>code/</code> and compare it to the course notebook.</li>
+      <li>Check one number in the report against <code>runs/</code>.</li>
+      <li>Answer the checkpoints yourself. "Method X did not help" is a fine result.</li>
+    </ul></div>
+  </div>
+  <div class="note">The agent writes polished text no matter what. Your grade depends on
+  whether <em>you</em> understand and can defend the work — not on how nice the report looks.</div>
+</section>
+
+<section id="files">
+  <h2>Files</h2>
+  <p class="sub">Your project folder after a full run:</p>
+  <div class="card"><pre style="background:none;padding:0;margin:0"><code>projects/my-topic/
+  README.md                 progress, your decisions A/B/C, next step
+  idea.pdf                  your idea
+  01_idea.md … 11_report_review.md
+  references.bib            literature (stage 02)
+  code/                     Python, adapted from course notebooks (07)
+  runs/                     logs and raw numbers from every run (08)
+  figures/                  plots (08)
+  10_report.md              the report</code></pre></div>
+  <p class="sub" style="margin-top:18px">In this toolkit folder — open any agent file to see exactly what it does:</p>
+  <div class="card"><table>
+    <tr><td><a href="AGENTS.md">AGENTS.md</a></td><td>The map: the pipeline table, where things are, the rules</td></tr>
+    <tr><td><a href=".claude/agents/">.claude/agents/</a></td><td>The nine agents, one file each</td></tr>
+    <tr><td><a href=".claude/skills/research/SKILL.md">.claude/skills/research/</a></td><td><code>/research</code> — the coordinator that runs the agents in order</td></tr>
+    <tr><td><a href=".agents/skills/research/SKILL.md">.agents/skills/research/</a></td><td><code>$research</code> for Codex — points to the same coordinator</td></tr>
+    <tr><td><a href="COURSE_CATALOG.md">COURSE_CATALOG.md</a></td><td>Everything the course covers: slides, notebooks, helpers, data</td></tr>
+    <tr><td><a href="examples/sensor-placement/ideafile.pdf">examples/</a></td><td>Example idea PDF</td></tr>
+    <tr><td><code>projects/</code></td><td>Your work, one folder per idea</td></tr>
+  </table></div>
+</section>
+
+</main>
+
+<footer class="wrap">TTK29 · Open this file in any browser — no installation needed.</footer>
+
+<script>
+const STAGES = [
+ {phase:"Understand the problem"},
+ {n:"01", a:"idea-refiner", t:"Refine the idea", s:"The agent reads your PDF and restates it sharply.",
+  agent:["Restates the idea; lists system, knowns, unknowns, constraints","Flags unclear assumptions","Points to relevant course notebooks"],
+  you:["Check it understood you","Correct anything wrong"], out:"01_idea.md"},
+ {n:"02", a:"literature-reviewer", t:"Literature review", s:"Web search for 8–15 real papers.",
+  agent:["Runs searches and records the queries","Summarises each paper with a working link","Groups them into themes"],
+  you:["Open 2–3 key papers yourself","Does anything important seem missing?"], out:"02_literature.md, references.bib"},
+ {n:"03", a:"gap-finder", t:"Knowledge gap", s:"What is known, what is open, what is doable.",
+  agent:["Separates established from open questions, with citations","Picks a gap that fits course methods and your time"],
+  you:["Do you agree the gap is real and small enough?"], out:"03_gap.md"},
+ {phase:"Ask the right question"},
+ {n:"04", a:"question-framer", t:"Research questions", s:"2–3 testable questions with metrics and baselines.",
+  agent:["Writes each question with hypothesis, metric, baseline and data"],
+  you:["Could a single experiment answer each one?"], out:"04_research_questions.md"},
+ {n:"05", a:"critic", t:"Critique the questions", s:"A critic tries to break them.", cp:"A",
+  agent:["The critic checks: already answered? testable? fair baseline?","Revises the questions"],
+  you:["<strong>Checkpoint A:</strong> choose your question and say why"], out:"05_rq_critique.md"},
+ {phase:"Solve it"},
+ {n:"06", a:"solution-architect", t:"Candidate solutions", s:"At least 3 approaches from the course, with plans.", cp:"B",
+  agent:["Proposes ≥ 3 approaches + a baseline, each tied to a notebook and slides","Gives an implementation plan, effort and risks","Compares them in a table"],
+  you:["<strong>Checkpoint B:</strong> choose your solution(s) and say why"], out:"06_solutions.md"},
+ {n:"07", a:"implementer", t:"Implement", s:"Python, adapted from the course notebooks.",
+  agent:["Adapts the course code, reuses python/pyutils","Small scripts, fixed seeds, a sanity check first"],
+  you:["Read the code and compare with the notebook"], out:"code/, 07_implementation.md"},
+ {n:"08", a:"experiment-runner", t:"Results", s:"The code is run; tables and figures.",
+  agent:["Runs everything, saves logs and raw numbers","Makes figures in the course style","Reports failed runs too"],
+  you:["Look at every figure. Surprised by anything?"], out:"runs/, figures/, 08_results.md"},
+ {n:"09", a:"critic", t:"Critique the results", s:"A critic challenges the conclusions.", cp:"C",
+  agent:["The critic checks fairness, seeds, leakage, alternative explanations","May send you back to stage 06 or 07"],
+  you:["<strong>Checkpoint C:</strong> explain the main result and its biggest limit in your own words"], out:"09_results_critique.md"},
+ {phase:"Communicate it"},
+ {n:"10", a:"report-writer", t:"Report", s:"A short paper built only from stages 01–09.",
+  agent:["Writes abstract → conclusion with figures and references"],
+  you:["Read it all. Could you present it?"], out:"10_report.md"},
+ {n:"11", a:"critic → report-writer", t:"Review the report", s:"A referee review, then the fixes.",
+  agent:["The critic reviews it as a journal referee","Fixes the issues and lists what changed"],
+  you:["Check the fixes and the issues it flags for you"], out:"11_report_review.md"}
+];
+const PROMPTS={"01": "Read AGENTS.md. Create projects/{topic}/, copy {pdf} into it as idea.pdf, and create README.md there from the template in .claude/skills/research/SKILL.md. Then run the idea-refiner agent (.claude/agents/idea-refiner.md) for projects/{topic}/. Tick stage 01 in the README and tell me what to check.", "02": "Run the literature-reviewer agent (.claude/agents/literature-reviewer.md) for projects/{topic}/. Tick stage 02 in projects/{topic}/README.md and tell me which papers I should open myself.", "03": "Run the gap-finder agent (.claude/agents/gap-finder.md) for projects/{topic}/. Tick stage 03 in the README and tell me what to check.", "04": "Run the question-framer agent (.claude/agents/question-framer.md) for projects/{topic}/. Tick stage 04 in the README and tell me what to check.", "05": "Run the critic agent (.claude/agents/critic.md) on projects/{topic}/04_research_questions.md (stage 05). Tick stage 05 in the README. Then show me the revised questions and ask me to choose (checkpoint A).", "06": "Run the solution-architect agent (.claude/agents/solution-architect.md) for projects/{topic}/, using my choice under Decision A in README.md. Tick stage 06. Then summarise the options and ask me to choose (checkpoint B).", "07": "Run the implementer agent (.claude/agents/implementer.md) for projects/{topic}/, using my choice under Decision B in README.md. Run the sanity check. Tick stage 07 and tell me how to run the code myself.", "08": "Run the experiment-runner agent (.claude/agents/experiment-runner.md) for projects/{topic}/. Tick stage 08 and give me the headline result for each research question.", "09": "Run the critic agent (.claude/agents/critic.md) on projects/{topic}/08_results.md (stage 09). Tick stage 09. Then ask me to explain the main result and its biggest limitation (checkpoint C).", "10": "Run the report-writer agent (.claude/agents/report-writer.md) for projects/{topic}/. Tick stage 10 and tell me the main claim of the report.", "11": "Run the critic agent (.claude/agents/critic.md) on projects/{topic}/10_report.md (stage 11). Then run the report-writer agent to fix the issues. Tick stage 11 and tell me which issues I should check myself."};
+const KEY="ttk29-research-ticks";
+let ticks={}; try{ticks=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+const tl=document.getElementById("timeline");
+STAGES.forEach(st=>{
+  if(st.phase){const h=document.createElement("div");h.className="phase";h.textContent=st.phase;tl.appendChild(h);return;}
+  const d=document.createElement("details");d.className="stage"+(st.cp?" cp":"");d.dataset.n=st.n;
+  d.innerHTML=`<summary><input type="checkbox" class="tick" aria-label="Stage ${st.n} done">
+    <span class="sn">${st.n}</span><span class="st">${st.t}<small>${st.s}</small></span>
+    ${st.cp?`<span class="badge">Checkpoint ${st.cp}</span>`:`<span class="chev">▶</span>`}</summary>
+    <div class="body"><div><h4>The agent: <code>${st.a}</code></h4><ul>${st.agent.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    <div><h4>You</h4><ul>${st.you.map(x=>`<li>${x}</li>`).join("")}</ul></div>
+    <div class="full"><h4>Output</h4><code>${st.out}</code></div>
+    <div class="full prompt"><h4>Prompt for this stage</h4><pre><code data-tpl=""></code></pre></div></div>`;
+  d.querySelector('[data-tpl]').dataset.tpl=PROMPTS[st.n];
+  const cb=d.querySelector(".tick");
+  cb.checked=!!ticks[st.n]; d.classList.toggle("done",cb.checked);
+  cb.addEventListener("click",e=>e.stopPropagation());
+  cb.addEventListener("change",()=>{ticks[st.n]=cb.checked;d.classList.toggle("done",cb.checked);save();});
+  tl.appendChild(d);
+});
+function save(){try{localStorage.setItem(KEY,JSON.stringify(ticks))}catch(e){} upd();}
+function upd(){const n=Object.values(ticks).filter(Boolean).length;
+  document.getElementById("ptext").textContent=`${n} of 11 done`;
+  document.getElementById("pbar").style.width=(n/11*100)+"%";}
+document.getElementById("reset").onclick=()=>{ticks={};document.querySelectorAll(".tick").forEach(c=>c.checked=false);
+  document.querySelectorAll(".stage").forEach(d=>d.classList.remove("done"));save();};
+upd();
+
+// generic tabs
+document.querySelectorAll('[role=tablist]').forEach(list=>{
+  list.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+    list.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected',x===b));
+    const box=list.parentElement;
+    box.querySelectorAll('.tabpanel').forEach(p=>p.hidden=p.dataset.panel!==b.dataset.tab);
+  });
+});
+
+// prompt templates
+const F={topic:document.getElementById('f-topic'),pdf:document.getElementById('f-pdf')};
+try{const v=JSON.parse(localStorage.getItem('ttk29-fields')||'{}');if(v.topic)F.topic.value=v.topic;if(v.pdf)F.pdf.value=v.pdf;}catch(e){}
+function renderTpl(){
+  const topic=(F.topic.value.trim()||'my-topic').replace(/\s+/g,'-'), pdf=F.pdf.value.trim()||'my-idea.pdf';
+  document.querySelectorAll('[data-tpl]').forEach(el=>el.textContent=el.dataset.tpl.replaceAll('{topic}',topic).replaceAll('{pdf}',pdf));
+  try{localStorage.setItem('ttk29-fields',JSON.stringify({topic:F.topic.value,pdf:F.pdf.value}))}catch(e){}
+}
+F.topic.addEventListener('input',renderTpl);F.pdf.addEventListener('input',renderTpl);
+
+// copy buttons
+document.querySelectorAll("pre").forEach(pre=>{
+  if(pre.closest("#files"))return;
+  const b=document.createElement("button");b.className="copy";b.textContent="Copy";
+  b.onclick=()=>{const t=pre.querySelector("code").textContent;
+    const done=()=>{b.textContent="Copied";setTimeout(()=>b.textContent="Copy",1200)};
+    if(navigator.clipboard)navigator.clipboard.writeText(t).then(done,()=>{});else done();};
+  pre.appendChild(b);
+});
+renderTpl();
+</script>
+</body>
+</html>
